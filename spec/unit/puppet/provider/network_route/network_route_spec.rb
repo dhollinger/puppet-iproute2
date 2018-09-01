@@ -10,12 +10,6 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
   let(:routes) { instance_double('Net::IP::Route::Collection', 'routes') }
   let(:netiproute) { instance_double('Net::IP::Route', prefix: 'route') }
-
-  before(:each) do
-    allow(Net::IP::Route).to receive(:new).with('should').and_return(netiproute)
-    allow(Net::IP::Route::Collection).to receive(:new).with('main').and_return(routes)
-  end
-
   let(:route) do
     [
       {
@@ -23,8 +17,8 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
         via: '10.0.2.2',
         dev: 'enp0s3',
         proto: 'dhcp',
-        metric: '100'
-      }
+        metric: '100',
+      },
     ]
   end
   let(:network_route) do
@@ -36,23 +30,26 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
         interface: 'enp0s3',
         metric: '100',
         prefix: 'default',
-        protocol: 'dhcp'
-      }
+        protocol: 'dhcp',
+      },
     ]
+  end
+
+  before(:each) do
+    allow(Net::IP::Route).to receive(:new).with('should').and_return(netiproute)
+    allow(Net::IP::Route::Collection).to receive(:new).with('main').and_return(routes)
   end
 
   describe '#puppet_munge(should)' do
     let(:should) { network_route[0] }
 
-    it 'should parse network_route into iproute2 keys' do
-      expect(provider.puppet_munge(should)).to eq(
-        {
-          dev: 'enp0s3',
-          metric: '100',
-          prefix: 'default',
-          proto: 'dhcp',
-          via: '10.0.2.2',
-        }
+    it 'parses network_route into iproute2 keys' do
+      expect(provider.puppet_munge(should)).to eq( # rubocop:disable RSpec/ImplicitExpect
+        dev: 'enp0s3',
+        metric: '100',
+        prefix: 'default',
+        proto: 'dhcp',
+        via: '10.0.2.2',
       )
     end
   end
@@ -64,20 +61,24 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
 
     it 'processes resources' do
       expect(provider.get(context)).to eq(
-      [{default_route: true,
-        ensure: 'present',
-        gateway: '10.0.2.2',
-        interface: 'enp0s3',
-        metric: '100',
-        prefix: 'default',
-        protocol: 'dhcp'}]
+        [
+          {
+            default_route: true,
+            ensure: 'present',
+            gateway: '10.0.2.2',
+            interface: 'enp0s3',
+            metric: '100',
+            prefix: 'default',
+            protocol: 'dhcp',
+          },
+        ],
       )
     end
   end
 
   describe '#create(context, name, should)' do
     before(:each) do
-      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged') # rubocop:disable RSpec/SubjectStub
     end
 
     it 'creates the resource' do
@@ -88,7 +89,7 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
 
   describe '#update(context, name, should)' do
     before(:each) do
-      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged') # rubocop:disable RSpec/SubjectStub
     end
 
     it 'updates the resource' do
@@ -100,7 +101,7 @@ RSpec.describe Puppet::Provider::NetworkRoute::NetworkRoute do
 
   describe 'delete(context, name, should)' do
     before(:each) do
-      allow(provider).to receive(:puppet_munge).with('should').and_return('munged')
+      allow(provider).to receive(:puppet_munge).with('should').and_return('munged') # rubocop:disable RSpec/SubjectStub
     end
 
     it 'deletes the resource' do

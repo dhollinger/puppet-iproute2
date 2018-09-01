@@ -41,7 +41,7 @@ RSpec.describe 'the network_route type' do
         prefix: '10.155.255.0/24',
         default_route: false,
         metric: '600',
-        source: '10.155.255.110'
+        source: '10.155.255.110',
       )
     end
 
@@ -66,7 +66,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        gateway: '10.155.255.1'
+        gateway: '10.155.255.1',
       )
     end
 
@@ -79,7 +79,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        interface: 'eth0'
+        interface: 'eth0',
       )
     end
 
@@ -92,7 +92,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        metric: '400'
+        metric: '400',
       )
     end
 
@@ -105,7 +105,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        table: 'main'
+        table: 'main',
       )
     end
 
@@ -118,7 +118,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        source: '10.155.255.10'
+        source: '10.155.255.10',
       )
     end
 
@@ -131,7 +131,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        scope: 'link'
+        scope: 'link',
       )
     end
 
@@ -144,7 +144,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        protocol: 'boot'
+        protocol: 'boot',
       )
     end
 
@@ -157,7 +157,7 @@ RSpec.describe 'the network_route type' do
     let(:resource) do
       Puppet::Type.type('network_route').new(
         prefix: 'default',
-        mtu: '1500'
+        mtu: '1500',
       )
     end
 
@@ -167,20 +167,24 @@ RSpec.describe 'the network_route type' do
   end
 
   context 'with invalid scope' do
-    it 'should raise an error' do
-      expect { Puppet::Type.type('network_route').new(
-        prefix: 'default',
-        scope: 'fail'
-      )}.to raise_error(Puppet::ResourceError)
+    it 'raises an error' do
+      expect {
+        Puppet::Type.type('network_route').new(
+          prefix: 'default',
+          scope: 'fail',
+        )
+      }.to raise_error(Puppet::ResourceError)
     end
   end
 
   context 'with invalid protocol' do
-    it 'should raise an error' do
-      expect { Puppet::Type.type('network_route').new(
-        prefix: 'default',
-        protocol: 'fail'
-      )}.to raise_error(Puppet::ResourceError)
+    it 'raises an error' do
+      expect {
+        Puppet::Type.type('network_route').new(
+          prefix: 'default',
+          protocol: 'fail',
+        )
+      }.to raise_error(Puppet::ResourceError)
     end
   end
 end
